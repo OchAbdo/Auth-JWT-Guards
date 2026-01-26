@@ -1,7 +1,9 @@
 import { DataSource, Repository } from "typeorm";
 import { User } from "./user.entity";
-import { ConflictException, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { UserCreate } from "./dtos/create-user.dto";
+import * as bcrypt from 'bcrypt'
+
 
 @Injectable()
 export class UserRepository {
@@ -12,7 +14,13 @@ export class UserRepository {
     }
 
     async createUser(newuser : UserCreate) : Promise<void>{
-        const nu = await this.repo.create(newuser)
+
+        const {email,password , firstname , lastname} = newuser
+        //salt for hash
+        const salt = await bcrypt.genSalt()
+        const hashedPassword = await bcrypt.hash(password , salt)
+
+        const  nu = this.repo.create({email , password : hashedPassword , firstname , lastname})
         try{
         await this.repo.save(nu)
         }
@@ -23,6 +31,11 @@ export class UserRepository {
                 throw new InternalServerErrorException()
             }
         }
+    }
+
+
+    async findOne(email : string): Promise<UserCreate | null>{
+       return await this.repo.findOneBy({email})
     }
 
 
