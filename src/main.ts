@@ -11,6 +11,12 @@ async function bootstrap() {
     })
   )
 
+   const corsOption = {
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200
+  }
+  app.enableCors(corsOption);
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
