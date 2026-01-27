@@ -14,7 +14,7 @@ export class AuthController {
     }
 
     @Post("/signin")
-    SignIn(@Body() newUser : AuthCredential) : Promise<string>{
+    SignIn(@Body() newUser : AuthCredential) : Promise<{accessJWT : string}>{
         return this.serviceAuth.SignIn(newUser)
     }
 
