@@ -38,5 +38,11 @@ export class UserRepository {
        return await this.repo.findOneBy({email})
     }
 
+    async findOnebyEmail(email : string) : Promise <User>{
+        const user = await this.repo.findBy({email})
+        console.log("ee" + user[0]);
+        return user[0]
+    }
+
 
 }

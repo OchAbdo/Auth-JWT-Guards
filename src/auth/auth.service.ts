@@ -21,7 +21,7 @@ export class AuthService {
         const user = await this.repo.findOne(email)
         if(user &&(await bcrypt.compare(password , user.password))){
             const paload : JWTPayload = {email}
-            const accessJWT = this.jwtService.sign(paload)
+            const accessJWT = await this.jwtService.sign(paload)
             return {accessJWT}
         }
         else{
